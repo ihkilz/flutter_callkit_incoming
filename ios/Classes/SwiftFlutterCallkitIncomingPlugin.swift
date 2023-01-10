@@ -179,10 +179,10 @@ public class SwiftFlutterCallkitIncomingPlugin: NSObject, FlutterPlugin, CXProvi
             call = Call(uuid: UUID(uuidString: self.data!.uuid)!, data: data)
             self.isFromPushKit = false
             self.sendEvent(SwiftFlutterCallkitIncomingPlugin.ACTION_CALL_ENDED, data.toJSON())
-            self.sharedProvider?.reportCall(with: UUID(uuidString: self.data!.uuid)!, endedAt: nil, reason: CXCallEndedReason.remoteEnded)
+            // self.sharedProvider?.reportCall(with: UUID(uuidString: self.data!.uuid)!, endedAt: nil, reason: CXCallEndedReason.remoteEnded)
         }else {
             call = Call(uuid: UUID(uuidString: data.uuid)!, data: data)
-            self.sharedProvider?.reportCall(with: UUID(uuidString: data.uuid)!, endedAt: nil, reason: CXCallEndedReason.remoteEnded)
+            // self.sharedProvider?.reportCall(with: UUID(uuidString: data.uuid)!, endedAt: nil, reason: CXCallEndedReason.remoteEnded)
         }
         self.callManager?.endCall(call: call!)
     }
