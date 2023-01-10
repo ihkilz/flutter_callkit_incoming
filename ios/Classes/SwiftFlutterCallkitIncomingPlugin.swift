@@ -6,20 +6,20 @@ import AVFoundation
 @available(iOS 10.0, *)
 public class SwiftFlutterCallkitIncomingPlugin: NSObject, FlutterPlugin, CXProviderDelegate {
     
-    static let ACTION_DID_UPDATE_DEVICE_PUSH_TOKEN_VOIP = "com.ihkilz.flutter_callkit_incoming.DID_UPDATE_DEVICE_PUSH_TOKEN_VOIP"
+    static let ACTION_DID_UPDATE_DEVICE_PUSH_TOKEN_VOIP = "com.hiennv.flutter_callkit_incoming.DID_UPDATE_DEVICE_PUSH_TOKEN_VOIP"
     
-    static let ACTION_CALL_INCOMING = "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_INCOMING"
-    static let ACTION_CALL_START = "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_START"
-    static let ACTION_CALL_ACCEPT = "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_ACCEPT"
-    static let ACTION_CALL_DECLINE = "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_DECLINE"
-    static let ACTION_CALL_ENDED = "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_ENDED"
-    static let ACTION_CALL_TIMEOUT = "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_TIMEOUT"
+    static let ACTION_CALL_INCOMING = "com.hiennv.flutter_callkit_incoming.ACTION_CALL_INCOMING"
+    static let ACTION_CALL_START = "com.hiennv.flutter_callkit_incoming.ACTION_CALL_START"
+    static let ACTION_CALL_ACCEPT = "com.hiennv.flutter_callkit_incoming.ACTION_CALL_ACCEPT"
+    static let ACTION_CALL_DECLINE = "com.hiennv.flutter_callkit_incoming.ACTION_CALL_DECLINE"
+    static let ACTION_CALL_ENDED = "com.hiennv.flutter_callkit_incoming.ACTION_CALL_ENDED"
+    static let ACTION_CALL_TIMEOUT = "com.hiennv.flutter_callkit_incoming.ACTION_CALL_TIMEOUT"
     
-    static let ACTION_CALL_TOGGLE_HOLD = "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_TOGGLE_HOLD"
-    static let ACTION_CALL_TOGGLE_MUTE = "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_TOGGLE_MUTE"
-    static let ACTION_CALL_TOGGLE_DMTF = "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_TOGGLE_DMTF"
-    static let ACTION_CALL_TOGGLE_GROUP = "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_TOGGLE_GROUP"
-    static let ACTION_CALL_TOGGLE_AUDIO_SESSION = "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_TOGGLE_AUDIO_SESSION"
+    static let ACTION_CALL_TOGGLE_HOLD = "com.hiennv.flutter_callkit_incoming.ACTION_CALL_TOGGLE_HOLD"
+    static let ACTION_CALL_TOGGLE_MUTE = "com.hiennv.flutter_callkit_incoming.ACTION_CALL_TOGGLE_MUTE"
+    static let ACTION_CALL_TOGGLE_DMTF = "com.hiennv.flutter_callkit_incoming.ACTION_CALL_TOGGLE_DMTF"
+    static let ACTION_CALL_TOGGLE_GROUP = "com.hiennv.flutter_callkit_incoming.ACTION_CALL_TOGGLE_GROUP"
+    static let ACTION_CALL_TOGGLE_AUDIO_SESSION = "com.hiennv.flutter_callkit_incoming.ACTION_CALL_TOGGLE_AUDIO_SESSION"
     
     @objc public static var sharedInstance: SwiftFlutterCallkitIncomingPlugin? = nil
     
@@ -185,7 +185,6 @@ public class SwiftFlutterCallkitIncomingPlugin: NSObject, FlutterPlugin, CXProvi
             self.sharedProvider?.reportCall(with: UUID(uuidString: data.uuid)!, endedAt: nil, reason: CXCallEndedReason.remoteEnded)
         }
         self.callManager?.endCall(call: call!)
-        
     }
     
     @objc public func activeCalls() -> [[String: Any]]? {
@@ -391,6 +390,11 @@ public class SwiftFlutterCallkitIncomingPlugin: NSObject, FlutterPlugin, CXProvi
 
     public func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         guard let call = self.callManager?.callWithUUID(uuid: action.callUUID) else {
+            if(self.answerCall == nil && self.outgoingCall == nil){
+                sendEvent(SwiftFlutterCallkitIncomingPlugin.ACTION_CALL_TIMEOUT, self.data?.toJSON())
+            } else {
+                sendEvent(SwiftFlutterCallkitIncomingPlugin.ACTION_CALL_ENDED, self.data?.toJSON())
+            }
             action.fail()
             return
         }

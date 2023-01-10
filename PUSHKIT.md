@@ -13,14 +13,14 @@ Make sure when you create Bundle ID(https://developer.apple.com/account/resource
 1. Enable Voice over IP Setting
   * Xcode Project > Capabilities
 
-    ![image info](https://raw.githubusercontent.com/ihkilz/flutter_callkit_incoming/master/images/Setting.png)
+    ![image info](https://raw.githubusercontent.com/hiennguyen92/flutter_callkit_incoming/master/images/Setting.png)
 
   <br>
 
   * VoIP Services Certificate
 
     Go to https://developer.apple.com/account/resources/certificates/add
-    ![image info](https://raw.githubusercontent.com/ihkilz/flutter_callkit_incoming/master/images/VoIPServicesCertificate.png)
+    ![image info](https://raw.githubusercontent.com/hiennguyen92/flutter_callkit_incoming/master/images/VoIPServicesCertificate.png)
 
     Download the certificate and install it into the Keychain Access app(download .cer and double click to install).
 
@@ -28,7 +28,7 @@ Make sure when you create Bundle ID(https://developer.apple.com/account/resource
     
   * Export .p12
 
-    ![image info](https://raw.githubusercontent.com/ihkilz/flutter_callkit_incoming/master/images/KeychainAccess.png)
+    ![image info](https://raw.githubusercontent.com/hiennguyen92/flutter_callkit_incoming/master/images/KeychainAccess.png)
 
   <br>
     
@@ -43,24 +43,24 @@ Make sure when you create Bundle ID(https://developer.apple.com/account/resource
 
 * Setup VoIP
 
-  ![image info](https://raw.githubusercontent.com/ihkilz/flutter_callkit_incoming/master/images/Xcode-S1.png)
+  ![image info](https://raw.githubusercontent.com/hiennguyen92/flutter_callkit_incoming/master/images/Xcode-S1.png)
 
 <br>
 
 * DeviceToken and handle incoming pushs
-  ![image info](https://raw.githubusercontent.com/ihkilz/flutter_callkit_incoming/master/images/Xcode-S2.png)
+  ![image info](https://raw.githubusercontent.com/hiennguyen92/flutter_callkit_incoming/master/images/Xcode-S2.png)
 
 <br>
 
 * Start call from Recent history on click (add if necessary)
 
-  ![image info](https://raw.githubusercontent.com/ihkilz/flutter_callkit_incoming/master/images/Xcode-S3.png)
+  ![image info](https://raw.githubusercontent.com/hiennguyen92/flutter_callkit_incoming/master/images/Xcode-S3.png)
 
 <br>
 
 * Example
 
-  https://github.com/ihkilz/flutter_callkit_incoming/blob/master/example/ios/Runner/AppDelegate.swift
+  https://github.com/hiennguyen92/flutter_callkit_incoming/blob/master/example/ios/Runner/AppDelegate.swift
 <br>
 <br>
 3. Testing
@@ -68,15 +68,15 @@ Make sure when you create Bundle ID(https://developer.apple.com/account/resource
   * Using App
     https://github.com/onmyway133/PushNotifications
 
-    ![image info](https://raw.githubusercontent.com/ihkilz/flutter_callkit_incoming/master/images/TestingApp.png)
+    ![image info](https://raw.githubusercontent.com/hiennguyen92/flutter_callkit_incoming/master/images/TestingApp.png)
 
 <br>
 
   * Using Curl
     ```
     curl -v \
-    -d '{"aps":{"alert":"iHKilz Call"},"id":"44d915e1-5ff4-4bed-bf13-c423048ec97a","nameCaller":"iHKilz","handle":"0123456789","isVideo":true}' \
-    -H "apns-topic: com.ihkilz.testing.voip" \
+    -d '{"aps":{"alert":"Hien Nguyen Call"},"id":"44d915e1-5ff4-4bed-bf13-c423048ec97a","nameCaller":"Hien Nguyen","handle":"0123456789","isVideo":true}' \
+    -H "apns-topic: com.hiennv.testing.voip" \
     -H "apns-push-type: voip" \
     --http2 \
     --cert VOIP.pem:'<passphrase>' \

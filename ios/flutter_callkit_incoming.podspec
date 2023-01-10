@@ -4,14 +4,14 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_callkit_incoming'
-  s.version          = '1.0.0'
+  s.version          = '0.0.1'
   s.summary          = 'Flutter Callkit Incoming'
   s.description      = <<-DESC
 Flutter Callkit Incoming
                        DESC
-  s.homepage         = 'https://github.com/ihkilz/flutter_callkit_incoming'
+  s.homepage         = 'https://github.com/hiennguyen92/flutter_callkit_incoming'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'iHKilz' => 'hien@ihkilz.com' }
+  s.author           = { 'Hien Nguyen' => 'hien@hiennv.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'

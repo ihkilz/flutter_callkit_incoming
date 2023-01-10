@@ -1,4 +1,4 @@
-package com.ihkilz.flutter_callkit_incoming
+package com.hiennv.flutter_callkit_incoming
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -12,18 +12,18 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
     companion object {
 
         const val ACTION_CALL_INCOMING =
-                "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_INCOMING"
-        const val ACTION_CALL_START = "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_START"
+                "com.hiennv.flutter_callkit_incoming.ACTION_CALL_INCOMING"
+        const val ACTION_CALL_START = "com.hiennv.flutter_callkit_incoming.ACTION_CALL_START"
         const val ACTION_CALL_ACCEPT =
-                "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_ACCEPT"
+                "com.hiennv.flutter_callkit_incoming.ACTION_CALL_ACCEPT"
         const val ACTION_CALL_DECLINE =
-                "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_DECLINE"
+                "com.hiennv.flutter_callkit_incoming.ACTION_CALL_DECLINE"
         const val ACTION_CALL_ENDED =
-                "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_ENDED"
+                "com.hiennv.flutter_callkit_incoming.ACTION_CALL_ENDED"
         const val ACTION_CALL_TIMEOUT =
-                "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_TIMEOUT"
+                "com.hiennv.flutter_callkit_incoming.ACTION_CALL_TIMEOUT"
         const val ACTION_CALL_CALLBACK =
-                "com.ihkilz.flutter_callkit_incoming.ACTION_CALL_CALLBACK"
+                "com.hiennv.flutter_callkit_incoming.ACTION_CALL_CALLBACK"
 
 
         const val EXTRA_CALLKIT_INCOMING_DATA = "EXTRA_CALLKIT_INCOMING_DATA"
@@ -42,6 +42,8 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
         const val EXTRA_CALLKIT_EXTRA = "EXTRA_CALLKIT_EXTRA"
         const val EXTRA_CALLKIT_HEADERS = "EXTRA_CALLKIT_HEADERS"
         const val EXTRA_CALLKIT_IS_CUSTOM_NOTIFICATION = "EXTRA_CALLKIT_IS_CUSTOM_NOTIFICATION"
+        const val EXTRA_CALLKIT_IS_CUSTOM_SMALL_EX_NOTIFICATION =
+            "EXTRA_CALLKIT_IS_CUSTOM_SMALL_EX_NOTIFICATION"
         const val EXTRA_CALLKIT_IS_SHOW_LOGO = "EXTRA_CALLKIT_IS_SHOW_LOGO"
         const val EXTRA_CALLKIT_IS_SHOW_MISSED_CALL_NOTIFICATION = "EXTRA_CALLKIT_IS_SHOW_MISSED_CALL_NOTIFICATION"
         const val EXTRA_CALLKIT_IS_SHOW_CALLBACK = "EXTRA_CALLKIT_IS_SHOW_CALLBACK"
@@ -49,48 +51,50 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
         const val EXTRA_CALLKIT_BACKGROUND_COLOR = "EXTRA_CALLKIT_BACKGROUND_COLOR"
         const val EXTRA_CALLKIT_BACKGROUND_URL = "EXTRA_CALLKIT_BACKGROUND_URL"
         const val EXTRA_CALLKIT_ACTION_COLOR = "EXTRA_CALLKIT_ACTION_COLOR"
+        const val EXTRA_CALLKIT_INCOMING_CALL_NOTIFICATION_CHANNEL_NAME = "EXTRA_CALLKIT_INCOMING_CALL_NOTIFICATION_CHANNEL_NAME"
+        const val EXTRA_CALLKIT_MISSED_CALL_NOTIFICATION_CHANNEL_NAME = "EXTRA_CALLKIT_MISSED_CALL_NOTIFICATION_CHANNEL_NAME"
 
         const val EXTRA_CALLKIT_ACTION_FROM = "EXTRA_CALLKIT_ACTION_FROM"
 
         fun getIntentIncoming(context: Context, data: Bundle?) =
                 Intent(context, CallkitIncomingBroadcastReceiver::class.java).apply {
-                    action = ACTION_CALL_INCOMING
+                    action = "${context.packageName}.${ACTION_CALL_INCOMING}"
                     putExtra(EXTRA_CALLKIT_INCOMING_DATA, data)
                 }
 
         fun getIntentStart(context: Context, data: Bundle?) =
                 Intent(context, CallkitIncomingBroadcastReceiver::class.java).apply {
-                    action = ACTION_CALL_START
+                    action = "${context.packageName}.${ACTION_CALL_START}"
                     putExtra(EXTRA_CALLKIT_INCOMING_DATA, data)
                 }
 
         fun getIntentAccept(context: Context, data: Bundle?) =
                 Intent(context, CallkitIncomingBroadcastReceiver::class.java).apply {
-                    action = ACTION_CALL_ACCEPT
+                    action = "${context.packageName}.${ACTION_CALL_ACCEPT}"
                     putExtra(EXTRA_CALLKIT_INCOMING_DATA, data)
                 }
 
         fun getIntentDecline(context: Context, data: Bundle?) =
                 Intent(context, CallkitIncomingBroadcastReceiver::class.java).apply {
-                    action = ACTION_CALL_DECLINE
+                    action = "${context.packageName}.${ACTION_CALL_DECLINE}"
                     putExtra(EXTRA_CALLKIT_INCOMING_DATA, data)
                 }
 
         fun getIntentEnded(context: Context, data: Bundle?) =
                 Intent(context, CallkitIncomingBroadcastReceiver::class.java).apply {
-                    action = ACTION_CALL_ENDED
+                    action = "${context.packageName}.${ACTION_CALL_ENDED}"
                     putExtra(EXTRA_CALLKIT_INCOMING_DATA, data)
                 }
 
         fun getIntentTimeout(context: Context, data: Bundle?) =
                 Intent(context, CallkitIncomingBroadcastReceiver::class.java).apply {
-                    action = ACTION_CALL_TIMEOUT
+                    action = "${context.packageName}.${ACTION_CALL_TIMEOUT}"
                     putExtra(EXTRA_CALLKIT_INCOMING_DATA, data)
                 }
 
         fun getIntentCallback(context: Context, data: Bundle?) =
                 Intent(context, CallkitIncomingBroadcastReceiver::class.java).apply {
-                    action = ACTION_CALL_CALLBACK
+                    action = "${context.packageName}.${ACTION_CALL_CALLBACK}"
                     putExtra(EXTRA_CALLKIT_INCOMING_DATA, data)
                 }
     }
@@ -102,19 +106,23 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
         val action = intent.action ?: return
         val data = intent.extras?.getBundle(EXTRA_CALLKIT_INCOMING_DATA) ?: return
         when (action) {
-            ACTION_CALL_INCOMING -> {
+            "${context.packageName}.${ACTION_CALL_INCOMING}" -> {
                 try {
                     callkitNotificationManager.showIncomingNotification(data)
                     sendEventFlutter(ACTION_CALL_INCOMING, data)
                     addCall(context, Data.fromBundle(data))
-                    val soundPlayerServiceIntent = Intent(context, CallkitSoundPlayerService::class.java)
-                    soundPlayerServiceIntent.putExtras(data)
-                    context.startService(soundPlayerServiceIntent)
+
+                    if (callkitNotificationManager.incomingChannelEnabled()) {
+                        val soundPlayerServiceIntent =
+                            Intent(context, CallkitSoundPlayerService::class.java)
+                        soundPlayerServiceIntent.putExtras(data)
+                        context.startService(soundPlayerServiceIntent)
+                    }
                 } catch (error: Exception) {
                     error.printStackTrace()
                 }
             }
-            ACTION_CALL_START -> {
+            "${context.packageName}.${ACTION_CALL_START}" -> {
                 try {
                     sendEventFlutter(ACTION_CALL_START, data)
                     addCall(context, Data.fromBundle(data), true)
@@ -122,7 +130,7 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                     error.printStackTrace()
                 }
             }
-            ACTION_CALL_ACCEPT -> {
+            "${context.packageName}.${ACTION_CALL_ACCEPT}" -> {
                 try {
                     sendEventFlutter(ACTION_CALL_ACCEPT, data)
                     context.stopService(Intent(context, CallkitSoundPlayerService::class.java))
@@ -132,7 +140,7 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                     error.printStackTrace()
                 }
             }
-            ACTION_CALL_DECLINE -> {
+            "${context.packageName}.${ACTION_CALL_DECLINE}" -> {
                 try {
                     sendEventFlutter(ACTION_CALL_DECLINE, data)
                     context.stopService(Intent(context, CallkitSoundPlayerService::class.java))
@@ -142,7 +150,7 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                     error.printStackTrace()
                 }
             }
-            ACTION_CALL_ENDED -> {
+            "${context.packageName}.${ACTION_CALL_ENDED}" -> {
                 try {
                     sendEventFlutter(ACTION_CALL_ENDED, data)
                     context.stopService(Intent(context, CallkitSoundPlayerService::class.java))
@@ -152,7 +160,7 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                     error.printStackTrace()
                 }
             }
-            ACTION_CALL_TIMEOUT -> {
+            "${context.packageName}.${ACTION_CALL_TIMEOUT}" -> {
                 try {
                     sendEventFlutter(ACTION_CALL_TIMEOUT, data)
                     context.stopService(Intent(context, CallkitSoundPlayerService::class.java))
@@ -164,7 +172,7 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                     error.printStackTrace()
                 }
             }
-            ACTION_CALL_CALLBACK -> {
+            "${context.packageName}.${ACTION_CALL_CALLBACK}" -> {
                 try {
                     callkitNotificationManager.clearMissCallNotification(data)
                     sendEventFlutter(ACTION_CALL_CALLBACK, data)
@@ -182,11 +190,23 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
     @Suppress("UNCHECKED_CAST")
     private fun sendEventFlutter(event: String, data: Bundle) {
         val android = mapOf(
-                "isCustomNotification" to data.getBoolean(EXTRA_CALLKIT_IS_CUSTOM_NOTIFICATION, false),
-                "ringtonePath" to data.getString(EXTRA_CALLKIT_RINGTONE_PATH, ""),
-                "backgroundColor" to data.getString(EXTRA_CALLKIT_BACKGROUND_COLOR, ""),
-                "backgroundUrl" to data.getString(EXTRA_CALLKIT_BACKGROUND_URL, ""),
-                "actionColor" to data.getString(EXTRA_CALLKIT_ACTION_COLOR, "")
+            "isCustomNotification" to data.getBoolean(EXTRA_CALLKIT_IS_CUSTOM_NOTIFICATION, false),
+            "isCustomSmallExNotification" to data.getBoolean(
+                EXTRA_CALLKIT_IS_CUSTOM_SMALL_EX_NOTIFICATION,
+                false
+            ),
+            "ringtonePath" to data.getString(EXTRA_CALLKIT_RINGTONE_PATH, ""),
+            "backgroundColor" to data.getString(EXTRA_CALLKIT_BACKGROUND_COLOR, ""),
+            "backgroundUrl" to data.getString(EXTRA_CALLKIT_BACKGROUND_URL, ""),
+            "actionColor" to data.getString(EXTRA_CALLKIT_ACTION_COLOR, ""),
+            "incomingCallNotificationChannelName" to data.getString(
+                EXTRA_CALLKIT_INCOMING_CALL_NOTIFICATION_CHANNEL_NAME,
+                ""
+            ),
+            "missedCallNotificationChannelName" to data.getString(
+                EXTRA_CALLKIT_MISSED_CALL_NOTIFICATION_CHANNEL_NAME,
+                ""
+            ),
         )
         val forwardData = mapOf(
                 "id" to data.getString(EXTRA_CALLKIT_ID, ""),

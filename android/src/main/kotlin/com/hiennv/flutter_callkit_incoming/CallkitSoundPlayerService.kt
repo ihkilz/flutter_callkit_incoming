@@ -1,4 +1,4 @@
-package com.ihkilz.flutter_callkit_incoming
+package com.hiennv.flutter_callkit_incoming
 
 import android.app.Service
 import android.content.Context
@@ -101,7 +101,12 @@ class CallkitSoundPlayerService : Service() {
         } else {
             mediaPlayer?.setAudioStreamType(AudioManager.STREAM_RING)
         }
-        mediaPlayer?.setDataSource(applicationContext, uri)
+        val assetFileDescriptor = applicationContext.getContentResolver().openAssetFileDescriptor(uri, "r")
+        if (assetFileDescriptor != null) {
+            mediaPlayer?.setDataSource(assetFileDescriptor)
+        } else {
+            mediaPlayer?.setDataSource(applicationContext, uri)
+        }
         mediaPlayer?.prepare()
         mediaPlayer?.isLooping = true
         mediaPlayer?.start()
@@ -131,16 +136,20 @@ class CallkitSoundPlayerService : Service() {
             }
         }
     } catch (e: Exception) {
-        if (fileName.equals("system_ringtone_default", true)) {
-            RingtoneManager.getActualDefaultRingtoneUri(
-                    this@CallkitSoundPlayerService,
-                    RingtoneManager.TYPE_RINGTONE
-            )
-        } else {
-            RingtoneManager.getActualDefaultRingtoneUri(
-                    this@CallkitSoundPlayerService,
-                    RingtoneManager.TYPE_RINGTONE
-            )
+        try {
+            if (fileName.equals("system_ringtone_default", true)) {
+                RingtoneManager.getActualDefaultRingtoneUri(
+                        this@CallkitSoundPlayerService,
+                        RingtoneManager.TYPE_RINGTONE
+                )
+            } else {
+                RingtoneManager.getActualDefaultRingtoneUri(
+                        this@CallkitSoundPlayerService,
+                        RingtoneManager.TYPE_RINGTONE
+                )
+            }
+        } catch (e: Exception) {
+            null
         }
     }
 }

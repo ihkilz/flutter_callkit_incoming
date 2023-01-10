@@ -2,7 +2,7 @@
 //  NSUserActivity.swift
 //  Runner
 //
-//  Created by iHKilz on 20/02/2022.
+//  Created by Hien Nguyen on 20/02/2022.
 //
 
 import Foundation

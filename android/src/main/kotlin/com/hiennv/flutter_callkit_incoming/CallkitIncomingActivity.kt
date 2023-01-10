@@ -1,4 +1,4 @@
-package com.ihkilz.flutter_callkit_incoming
+package com.hiennv.flutter_callkit_incoming
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -22,18 +22,18 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.ACTION_CALL_INCOMING
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_AVATAR
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_BACKGROUND_URL
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_BACKGROUND_COLOR
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_DURATION
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_INCOMING_DATA
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_NAME_CALLER
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_HANDLE
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_HEADERS
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_IS_SHOW_LOGO
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_TYPE
-import com.ihkilz.flutter_callkit_incoming.widgets.RippleRelativeLayout
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.ACTION_CALL_INCOMING
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_AVATAR
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_BACKGROUND_URL
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_BACKGROUND_COLOR
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_DURATION
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_INCOMING_DATA
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_NAME_CALLER
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_HANDLE
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_HEADERS
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_IS_SHOW_LOGO
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_TYPE
+import com.hiennv.flutter_callkit_incoming.widgets.RippleRelativeLayout
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlin.math.abs
@@ -43,8 +43,8 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
 import android.text.TextUtils
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_TEXT_ACCEPT
-import com.ihkilz.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_TEXT_DECLINE
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_TEXT_ACCEPT
+import com.hiennv.flutter_callkit_incoming.CallkitIncomingBroadcastReceiver.Companion.EXTRA_CALLKIT_TEXT_DECLINE
 
 
 class CallkitIncomingActivity : Activity() {
@@ -52,17 +52,17 @@ class CallkitIncomingActivity : Activity() {
     companion object {
 
         const val ACTION_ENDED_CALL_INCOMING =
-                "com.ihkilz.flutter_callkit_incoming.ACTION_ENDED_CALL_INCOMING"
+                "com.hiennv.flutter_callkit_incoming.ACTION_ENDED_CALL_INCOMING"
 
-        fun getIntent(data: Bundle) = Intent(ACTION_CALL_INCOMING).apply {
-            action = ACTION_CALL_INCOMING
+        fun getIntent(context: Context, data: Bundle) = Intent(ACTION_CALL_INCOMING).apply {
+            action = "${context.packageName}.${ACTION_CALL_INCOMING}"
             putExtra(EXTRA_CALLKIT_INCOMING_DATA, data)
             flags =
                     Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
         }
 
-        fun getIntentEnded() =
-                Intent(ACTION_ENDED_CALL_INCOMING)
+        fun getIntentEnded(context: Context) =
+                Intent("${context.packageName}.${ACTION_ENDED_CALL_INCOMING}")
 
     }
 
@@ -303,6 +303,11 @@ class CallkitIncomingActivity : Activity() {
         val intent =
                 CallkitIncomingBroadcastReceiver.getIntentDecline(this@CallkitIncomingActivity, data)
         sendBroadcast(intent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            finishAndRemoveTask()
+        } else {
+            finish()
+        }
     }
 
     private fun getPicassoInstance(context: Context, headers: HashMap<String, Any?>): Picasso {

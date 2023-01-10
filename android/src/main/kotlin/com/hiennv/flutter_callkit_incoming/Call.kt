@@ -1,4 +1,4 @@
-package com.ihkilz.flutter_callkit_incoming
+package com.hiennv.flutter_callkit_incoming
 
 import android.os.Bundle
 
@@ -27,6 +27,7 @@ data class Data(val args: Map<String, Any?>) {
     var from: String = ""
 
     var isCustomNotification: Boolean = false
+    var isCustomSmallExNotification: Boolean = false
     var isShowLogo: Boolean = false
     var isShowCallback: Boolean = true
     var ringtonePath: String
@@ -34,6 +35,8 @@ data class Data(val args: Map<String, Any?>) {
     var backgroundUrl: String
     var actionColor: String
     var isShowMissedCallNotification: Boolean = true
+    var incomingCallNotificationChannelName: String? = null
+    var missedCallNotificationChannelName: String? = null
 
     var isAccepted: Boolean = false
 
@@ -41,6 +44,8 @@ data class Data(val args: Map<String, Any?>) {
         val android: HashMap<String, Any?>? = args["android"] as? HashMap<String, Any?>?
         if (android != null) {
             isCustomNotification = (android["isCustomNotification"] as? Boolean) ?: false
+            isCustomSmallExNotification =
+                (android["isCustomSmallExNotification"] as? Boolean) ?: false
             isShowLogo = (android["isShowLogo"] as? Boolean) ?: false
             isShowCallback = (android["isShowCallback"] as? Boolean) ?: true
             ringtonePath = (android["ringtonePath"] as? String) ?: ""
@@ -48,8 +53,11 @@ data class Data(val args: Map<String, Any?>) {
             backgroundUrl = (android["backgroundUrl"] as? String) ?: ""
             actionColor = (android["actionColor"] as? String) ?: "#4CAF50"
             isShowMissedCallNotification = (android["isShowMissedCallNotification"] as? Boolean) ?: true
+            incomingCallNotificationChannelName = android["incomingCallNotificationChannelName"] as? String
+            missedCallNotificationChannelName = android["missedCallNotificationChannelName"] as? String
         } else {
             isCustomNotification = (args["isCustomNotification"] as? Boolean) ?: false
+            isCustomSmallExNotification = (args["isCustomSmallExNotification"] as? Boolean) ?: false
             isShowLogo = (args["isShowLogo"] as? Boolean) ?: false
             isShowCallback = (args["isShowCallback"] as? Boolean) ?: true
             ringtonePath = (args["ringtonePath"] as? String) ?: ""
@@ -90,6 +98,10 @@ data class Data(val args: Map<String, Any?>) {
                 isCustomNotification
         )
         bundle.putBoolean(
+            CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_IS_CUSTOM_SMALL_EX_NOTIFICATION,
+            isCustomSmallExNotification
+        )
+        bundle.putBoolean(
                 CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_IS_SHOW_LOGO,
                 isShowLogo
         )
@@ -111,6 +123,14 @@ data class Data(val args: Map<String, Any?>) {
         bundle.putBoolean(
                 CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_IS_SHOW_MISSED_CALL_NOTIFICATION,
                 isShowMissedCallNotification
+        )
+        bundle.putString(
+            CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_INCOMING_CALL_NOTIFICATION_CHANNEL_NAME,
+            incomingCallNotificationChannelName
+        )
+        bundle.putString(
+            CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_MISSED_CALL_NOTIFICATION_CHANNEL_NAME,
+            missedCallNotificationChannelName
         )
         return bundle
     }
@@ -145,8 +165,12 @@ data class Data(val args: Map<String, Any?>) {
                     bundle.getSerializable(CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_HEADERS) as HashMap<String, Any?>
 
             data.isCustomNotification = bundle.getBoolean(
-                    CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_IS_CUSTOM_NOTIFICATION,
-                    false
+                CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_IS_CUSTOM_NOTIFICATION,
+                false
+            )
+            data.isCustomSmallExNotification = bundle.getBoolean(
+                CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_IS_CUSTOM_SMALL_EX_NOTIFICATION,
+                false
             )
             data.isShowLogo = bundle.getBoolean(
                     CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_IS_SHOW_LOGO,
@@ -175,6 +199,12 @@ data class Data(val args: Map<String, Any?>) {
             data.isShowMissedCallNotification = bundle.getBoolean(
                     CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_IS_SHOW_MISSED_CALL_NOTIFICATION,
                     true
+            )
+            data.incomingCallNotificationChannelName = bundle.getString(
+                CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_INCOMING_CALL_NOTIFICATION_CHANNEL_NAME
+            )
+            data.missedCallNotificationChannelName = bundle.getString(
+                CallkitIncomingBroadcastReceiver.EXTRA_CALLKIT_MISSED_CALL_NOTIFICATION_CHANNEL_NAME
             )
             return data
         }

@@ -1,5 +1,5 @@
 group 'com.example.flutter_callkit_incoming'
-version '1.0.0'
+version '1.0-SNAPSHOT'
 
 buildscript {
     ext.kotlin_version = '1.6.21'
